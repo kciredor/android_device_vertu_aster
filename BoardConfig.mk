@@ -29,3 +29,6 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 TARGET_PREBUILT_KERNEL := device/vertu/alexa/kernel
 
 BOARD_HAS_NO_SELECT_BUTTON := true
+
+# required settings
+DEVICE_RESOLUTION := 1080x1920

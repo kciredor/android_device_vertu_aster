@@ -1,0 +1,7 @@
+Make sure your android/bootable/recovery/roots.c contains a return as first line in setup_legacy_storage_paths, to work around a bug.
+
+void setup_legacy_storage_paths() {
+    return;
+
+    <-- snip -->
+}
