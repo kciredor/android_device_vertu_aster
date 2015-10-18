@@ -1,0 +1,4 @@
+#VERTU - lunyikuo - V03-4355
+on early-init
+	setprop persist.sys.fih.ramdump_ssr 0
+# end VERTU V03-4355

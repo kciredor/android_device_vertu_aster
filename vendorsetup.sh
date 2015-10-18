@@ -1,0 +1,2 @@
+add_lunch_combo cm_alexa-userdebug
+add_lunch_combo cm_alexa-eng

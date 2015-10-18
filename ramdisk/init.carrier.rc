@@ -1,0 +1,17 @@
+# Vertu init.rc backported changes, imported by CM's init.rc.
+
+on init
+    mkdir /dpp 0771 system system
+    mount vfat /dev/block/mmcblk0p8 /dpp
+    mkdir /mnt/shell 0700 shell shell
+
+# service bootsound /system/bin/bootsound
+#     class main
+#     user shell
+#     group shell
+#     disabled
+#     oneshot
+# 
+# service stcbackupd /system/bin/backupd stcbackupd
+#     class main
+#     socket stcbackupd stream 600 system system

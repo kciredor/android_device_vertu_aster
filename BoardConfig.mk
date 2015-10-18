@@ -1,27 +1,41 @@
+LOCAL_PATH := device/vertu/alexa
+
 USE_CAMERA_STUB := true
 
-# inherit from the proprietary version
--include vendor/vertu/alexa/BoardConfigVendor.mk
+# # inherit from the proprietary version
+# -include vendor/vertu/alexa/BoardConfigVendor.mk
+
+BOARD_VENDOR = qcom
+
+TARGET_BOARD_PLATFORM := msm8974
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno330
 
 TARGET_ARCH := arm
-TARGET_NO_BOOTLOADER := true
-TARGET_BOARD_PLATFORM := unknown
+TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
-TARGET_ARCH_VARIANT := armv7-a-neon
-TARGET_CPU_VARIANT := cortex-a7
+TARGET_CPU_VARIANT := krait
 TARGET_CPU_SMP := true
+TARGET_USE_QCOM_BIONIC_OPTIMIZATION := true
+
+TARGET_POWERHAL_VARIANT := qcom
+TARGET_BOOTLOADER_BOARD_NAME := MSM8974
+TARGET_NO_BOOTLOADER := true
+TARGET_USERIMAGES_USE_EXT4 := true
+
+COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
+
 ARCH_ARM_HAVE_TLS_REGISTER := true
 
-TARGET_BOOTLOADER_BOARD_NAME := alexa
-
 BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x37 ehci-hcd.park=3 vmalloc=384m
-BOARD_KERNEL_BASE := 0x00000000
+BOARD_KERNEL_BASE := 0x00008000
 BOARD_KERNEL_PAGESIZE := 2048
 
-BOARD_MKBOOTIMG_ARGS := --dt device/vertu/alexa/recovery.img-dt
+BOARD_MKBOOTIMG_ARGS := --dt $(LOCAL_PATH)/recovery.img-dt --ramdisk_offset 0x01000000
 
-# fix this up by examining /proc/mtd on a running device
+BOARD_USES_QCOM_HARDWARE := true
+BOARD_USES_QC_TIME_SERVICES := true
+
 BOARD_BOOTIMAGE_PARTITION_SIZE := 62914560        # 61440    mmcblk0p21
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216    # 16384    mmcblk0p22
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1073741824    # 1048576  mmcblk0p23
@@ -29,12 +43,16 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE := 12884901888 # 12582912 mmcblk0p26
 BOARD_CACHEIMAGE_PARTITION_SIZE := 536870912      # 524288   mmcblk0p24
 BOARD_FLASH_BLOCK_SIZE := 131072
 
-TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 
-TARGET_PREBUILT_KERNEL := device/vertu/alexa/kernel
+TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
+TARGET_KERNEL_SOURCE := kernel/vertu/alexa
+TARGET_KERNEL_CONFIG := msm8974_defconfig
+TARGET_INIT_VENDOR_LIB := libinit_msm
+# TARGET_KERNEL_CONFIG := V03_ftm_defconfig
 
-BOARD_HAS_NO_SELECT_BUTTON := true
+# BOARD_HAS_NO_SELECT_BUTTON := true
+BOARD_HAS_NO_SELECT_BUTTON := false
 
-# required settings
-DEVICE_RESOLUTION := 1080x1920
+BOARD_USES_ALSA_AUDIO := true
+BOARD_HAS_QCOM_WLAN := true

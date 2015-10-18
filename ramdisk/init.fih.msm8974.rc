@@ -1,0 +1,166 @@
+# VERTU -lunyikuo  - V03-498
+import init.qcom.log.rc
+# end VERTU - V03-498
+# VERTU - ferrychchen - V03-799
+import init.fih.proc_fd_dump_svc.rc
+# end VERTU - V03-799
+# VERTU - ricandre - ODIN-1535 Persist download_mode for eng/userdebug
+import init.vertu.rc
+# end VERTU - ODIN-1535
+on boot
+    # VERTU - shawnlee - V03-18 - temporary solution to recover UART debug output
+    insmod /system/lib/modules/uart_log_monitor.ko
+    # end VERTU - V03-18
+    # VERTU - ferrychchen - V03-3459
+    chown root root /sys/fs/selinux/enforce
+    # end VERTU - V03-3459
+
+on init
+# VERTU - ferrychchen - V03-230,V03-231,V03-671,V03-933, V03-1594
+
+    mkdir /storage/usbdisk
+    chmod 755 /storage/usbdisk
+    chown system system /storage/usbdisk
+
+# end VERTU - V03-230,V03-231,V03-671,V03-1594
+
+on charger
+    # VERTU - ferrychchen - V03-4376
+    # mkdir /system
+    # mount ext4 /dev/block/platform/msm_sdcc.1/by-name/system /system 
+    # end VERTU - ferrychchen - V03-4376
+
+    # VERTU - ferrychchen - V03-439
+    chmod 666 /sys/class/leds/led:rgb_red/blink
+    chmod 666 /sys/class/leds/led:rgb_red/brightness
+    chmod 666 /sys/class/leds/led:rgb_green/blink
+    chmod 666 /sys/class/leds/led:rgb_green/brightness
+    chmod 666 /sys/class/leds/led:rgb_blue/blink
+    chmod 666 /sys/class/leds/led:rgb_blue/brightness
+    # end VERTU - V03-439
+
+    # VERTU - ferrychchen - V03-1040
+    # enable CPU suspend and idle in charging OS
+    write /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled 1
+    write /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled 1
+    write /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled 1
+    write /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled 1
+ 
+    write /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled 1
+    write /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled 1
+    write /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled 1
+ 
+    write /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled 1
+    write /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled 1
+    write /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled 1
+ 
+    write /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled 1
+    write /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled 1
+    write /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled 1
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "powersave"
+    # end VERTU - V03-1040
+
+    # VERTU - ferrychchen - V03-439
+    write /sys/class/leds/led:rgb_red/brightness 0
+    write /sys/class/leds/led:rgb_green/brightness 100
+    write /sys/class/leds/led:rgb_green/blink 1
+    # end VERTU - V03-439
+    
+    # VERTU - ferrychchen - V03-1040, V03-4376
+    # enable adb functions
+    start mpdecision
+    # end VERTU - V03-1040, V03-4376
+
+on post-fs
+    ## VERTU - waynewhlo - V03-3128 - fix CTS permission test fail
+    # VERTU - ferrychchen - V03-14 
+    chown root audio /dev/i2c-1
+    chmod 660 /dev/i2c-1
+    # end VERTU - V03-14 
+    # VERTU - ferrychchen - V03-143
+    chown root system /sys/class/leds/led:rgb_red/blink
+    chown root system /sys/class/leds/led:rgb_red/brightness
+    chown root system /sys/class/leds/led:rgb_green/blink
+    chown root system /sys/class/leds/led:rgb_green/brightness
+    chown root system /sys/class/leds/led:rgb_blue/blink
+    chown root system /sys/class/leds/led:rgb_blue/brightness
+
+    chmod 660 /sys/class/leds/led:rgb_red/blink
+    chmod 660 /sys/class/leds/led:rgb_red/brightness
+    chmod 660 /sys/class/leds/led:rgb_green/blink
+    chmod 660 /sys/class/leds/led:rgb_green/brightness
+    chmod 660 /sys/class/leds/led:rgb_blue/blink
+    chmod 660 /sys/class/leds/led:rgb_blue/brightness
+
+    chown root system /sys/devices/virtual/timed_output/pm8xxx-haptics/enable
+    chmod 660 /sys/devices/virtual/timed_output/pm8xxx-haptics/enable
+    # end VERTU - V03-143
+    ## end VERTU - V03-3128
+
+    # VERTU - ferrychchen - V03-218
+    write /sys/class/leds/led:rgb_red/blink 0
+    write /sys/class/leds/led:rgb_red/brightness 0
+    write /sys/class/leds/led:rgb_green/blink 0
+    write /sys/class/leds/led:rgb_green/brightness 0
+    write /sys/class/leds/led:rgb_blue/blink 0
+    write /sys/class/leds/led:rgb_blue/brightness 0
+    # end VERTU - V03-218
+
+    # VERTU - ferrychchen - V03-3459
+    chmod 444 /sys/fs/selinux/enforce
+    # end VERTU - V03-3459
+
+    # VERTU - ferrychchen - V04-127
+    mkdir /data/anr
+    chown root system /data/anr
+    chmod 775 /data/anr
+    # end VERTU - V04-127
+
+# VERTU - ferrychchen - V03-3108
+#on post-fs-data
+# VERTU - ferrychchen - V03-1352
+    # we will remap this as /mnt/sdcard with the sdcard fuse tool
+#    mkdir /data/media 0770 media_rw media_rw
+#    mount ext4 /dev/block/platform/msm_sdcc.1/by-name/sdcard /data/media
+# VERTU - ferrychchen - V03-1594
+#    chmod 0770 /data/media
+# end VERTU - V03-1594
+#    chown media_rw media_rw /data/media
+# end VERTU - V03-1352
+# end VERTU - V03-3108
+
+
+# VERTU - sophia -V03-486- Porting Monkey
+service mkyCust /system/bin/sh /system/etc/runMonkey_custom.sh
+    user root
+    oneshot
+    disabled
+
+on property:persist.sys.runmky=CUST
+    start mkyCust
+# end VERTU -V03-486
+
+# VERTU - hsiaohsuanlin - V03-1271
+service wbg_service /system/bin/sh /system/etc/wbg_bt.sh
+    user root
+    disabled
+    oneshot
+	
+    on property:persist.sys.wbg.bt.service=true
+    start wbg_service
+    
+service wbgtesttool_wifi /system/bin/sh /system/etc/wbg_wifi.sh
+    user root
+    disabled
+    oneshot
+
+on property:persist.sys.wbg.wifi=start
+    start wbgtesttool_wifi
+# end VERTU - V03-1271
+
+# Vertu - HsuanChen - V03-1612
+service configure_mtu /system/bin/sh /system/etc/configure_mtu.sh
+    class main
+    disabled
+    oneshot
+# end VERTU  - V03-1612

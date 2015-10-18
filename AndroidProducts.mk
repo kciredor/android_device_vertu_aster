@@ -1,2 +1,2 @@
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/device_alexa.mk
+    $(LOCAL_DIR)/full_alexa.mk

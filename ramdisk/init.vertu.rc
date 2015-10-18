@@ -1,0 +1,27 @@
+
+# VERTU - ricandre - ODIN-1535 Persist download_mode for eng/userdebug
+import init.vertu.debug.rc
+# end VERTU ODIN-1535
+
+
+# VERTU - Kevin Quigley - VERTUHLR-427 - VERTU_VARIANT
+# VERTU - Chao Yang - ODIN-1888 - VERTU_VARIANT
+#
+#  Needs to be run during this early phase so that we ensure the needed partitions are in R/W mode
+# and therefore we do not need to seperately mount and unmount the system partition.
+on post-fs-data
+   write /dev/kmsg "init: vertu: running vertu_variant setup"
+   class_start post-fs
+
+service vertu_variant /init.vertu.variant.sh ${ro.board.platform} ${ro.serialno}
+   class post-fs
+   user root
+   group root
+   oneshot
+
+# end ODIN-1888
+# end VERTU VERTUHLR-427
+
+# VERTU - Peter Seed - ODIN-725 Apical Assertive Display
+import init.ppd.rc
+# end VERTU - Peter Seed - ODIN-725 Apical Assertive Display
